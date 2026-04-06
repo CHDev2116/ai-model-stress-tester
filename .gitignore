@@ -1,0 +1,20 @@
+# --- Data & Artifacts ---
+data/*.csv
+reports/*.png
+reports/*.json
+
+# --- Python Environment ---
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+env/
+.env
+
+# --- macOS System Files ---
+.DS_Store
+
+# --- Editor Settings ---
+.vscode/
+.idea/

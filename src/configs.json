@@ -1,0 +1,26 @@
+{
+    "AVGO": {
+        "data_source": "data/avgo_assets.csv",
+        "processed_output": "data/processed_avgo.csv",
+        "features": ["MA5", "MA20", "Vol_MA5", "Volatility", "RSI", "Bias"],
+        "target_type": "Price"
+    },
+    "GOOG": {
+        "data_source": "data/goog_assets.csv",
+        "processed_output": "data/processed_goog.csv",
+        "features": ["MA5", "MA20", "MA_Ratio", "Volatility_20", "RSI", "Bias"],
+        "target_type": "Log_Return"
+    },
+    "MU": {
+        "data_source": "data/mu_assets.csv",
+        "processed_output": "data/processed_mu.csv",
+        "features": ["MA5", "MA20", "Volatility_20", "Vol_Norm", "RSI", "Bias"], 
+        "target_type": "Simple_Return"
+    },
+    "NVDA": {
+        "data_source": "data/nvda_assets.csv",
+        "processed_output": "data/processed_nvda.csv",
+        "features": ["MA5", "MA60", "Vol_MA5", "Volatility", "RSI"],
+        "target_type": "Price"
+    }
+}
