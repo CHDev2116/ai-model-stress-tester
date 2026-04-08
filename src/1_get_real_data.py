@@ -25,13 +25,13 @@ def fetch_stock_data(ticker):
     # 2. Ensure the data directory exists
     os.makedirs(os.path.dirname(save_path), exist_ok=True)
 
-    # 3. Download market data (rolling 5-year window ending yesterday)
+    # 3. Download market data (rolling 2-year window ending yesterday)
     end_date = (datetime.now() - timedelta(days=1)).date()
     try:
-        start_date = end_date.replace(year=end_date.year - 5)
+        start_date = end_date.replace(year=end_date.year - 2)
     except ValueError:
         # Handle leap day edge case (e.g., Feb 29 -> Feb 28)
-        start_date = end_date.replace(month=2, day=28, year=end_date.year - 5)
+        start_date = end_date.replace(month=2, day=28, year=end_date.year - 2)
     data = yf.download(ticker, start=start_date.isoformat(), end=end_date.isoformat())
     
     if data.empty:

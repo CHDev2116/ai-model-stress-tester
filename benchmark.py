@@ -2,6 +2,7 @@ import subprocess
 import os
 import json
 import sys
+import argparse
 from datetime import datetime
 
 # Configuration
@@ -18,7 +19,7 @@ def prune_reports(report_dir, keep_latest=10):
     for old_path in files[keep_latest:]:
         os.remove(old_path)
 
-def run_benchmark():
+def run_benchmark(skip_ingestion=False):
     start_time = datetime.now()
     results_summary = {}
 
@@ -36,6 +37,8 @@ def run_benchmark():
             ('Feature_Engineering', '3_feature_engineering.py'),
             ('Model_Training', '4_train_model.py')
         ]
+        if skip_ingestion:
+            steps = [s for s in steps if s[0] != 'Data_Ingestion']
         
         for step_label, script_name in steps:
             script_path = os.path.join(current_dir, 'src', script_name)
@@ -99,4 +102,11 @@ def run_benchmark():
     print(f"📈 Execution Summary: {results_summary}")
 
 if __name__ == "__main__":
-    run_benchmark()
+    parser = argparse.ArgumentParser(description="Run stock modeling benchmark pipeline.")
+    parser.add_argument(
+        "--skip-ingestion",
+        action="store_true",
+        help="Skip online data download and use existing local data files."
+    )
+    args = parser.parse_args()
+    run_benchmark(skip_ingestion=args.skip_ingestion)
