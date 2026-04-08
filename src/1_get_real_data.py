@@ -3,6 +3,7 @@ import pandas as pd
 import os
 import sys
 import json
+from datetime import datetime, timedelta
 
 def fetch_stock_data(ticker):
     print(f"🚀 Starting Data Ingestion for: {ticker}")
@@ -24,9 +25,14 @@ def fetch_stock_data(ticker):
     # 2. Ensure the data directory exists
     os.makedirs(os.path.dirname(save_path), exist_ok=True)
 
-    # 3. Download market data (From 2023 to present to ensure sufficient MA60 history)
-    # Note: Current date set to 2026-04-06
-    data = yf.download(ticker, start="2023-01-01", end="2026-04-06")
+    # 3. Download market data (rolling 5-year window ending yesterday)
+    end_date = (datetime.now() - timedelta(days=1)).date()
+    try:
+        start_date = end_date.replace(year=end_date.year - 5)
+    except ValueError:
+        # Handle leap day edge case (e.g., Feb 29 -> Feb 28)
+        start_date = end_date.replace(month=2, day=28, year=end_date.year - 5)
+    data = yf.download(ticker, start=start_date.isoformat(), end=end_date.isoformat())
     
     if data.empty:
         print(f"❌ Error: No market data found for {ticker}")
@@ -39,8 +45,15 @@ def fetch_stock_data(ticker):
 
     # 5. Data Cleaning and Formatting
     df = df.reset_index()
-    # Ensure standard OHLCV columns exist
-    df = df[['Date', 'Close', 'Volume']]
+    # Keep core columns and include High/Low when available for downstream features.
+    required_cols = ['Date', 'Close', 'Volume']
+    optional_cols = ['High', 'Low']
+    selected_cols = required_cols + [c for c in optional_cols if c in df.columns]
+    missing_required = [c for c in required_cols if c not in df.columns]
+    if missing_required:
+        print(f"❌ Error: Missing required columns from data source: {missing_required}")
+        return
+    df = df[selected_cols]
     df['Close'] = pd.to_numeric(df['Close'], errors='coerce')
     df['Volume'] = pd.to_numeric(df['Volume'], errors='coerce')
     df = df.dropna()

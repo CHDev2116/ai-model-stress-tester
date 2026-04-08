@@ -16,5 +16,8 @@ env/
 .DS_Store
 
 # --- Editor Settings ---
-.vscode/
+.vscode/*
+!.vscode/settings.json
+!.vscode/zsh/
+!.vscode/zsh/.zshrc
 .idea/
