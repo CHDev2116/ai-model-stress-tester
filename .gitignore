@@ -1,9 +1,17 @@
 # --- Data & Artifacts ---
 data/*.csv
 reports/*.png
+!reports/chart_GOOG.png
+!reports/chart_GOOG_pricepath.png
+!reports/chart_NVDA_failure.png
 reports/*.json
+artifacts/
 
 # --- Python Environment ---
+build/
+dist/
+*.egg-info/
+.matplotlib-cache/
 __pycache__/
 *.py[cod]
 *$py.class

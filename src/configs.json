@@ -19,9 +19,9 @@
         "lookback_days": 730
     },
     "NVDA": {
-    "target_type": "Simple_Return",
-    "features": ["Daily_Return", "Vol_Ratio", "RSI", "Bias", "Volatility_20"],
-    "data_source": "data/nvda_assets.csv",
-    "processed_output": "data/processed_nvda.csv"
-  }
+        "data_source": "data/nvda_assets.csv",
+        "processed_output": "data/processed_nvda.csv",
+        "features": ["Daily_Return", "Vol_Ratio", "RSI", "Bias", "Volatility_20"],
+        "target_type": "Simple_Return"
+    }
 }

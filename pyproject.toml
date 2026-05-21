@@ -1,0 +1,54 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "stationarity-aware-market-modeling"
+version = "0.1.0"
+description = "Stationarity-aware ML framework for stress-testing financial time-series models under volatile market regimes."
+readme = "README.md"
+license = { file = "LICENSE" }
+requires-python = ">=3.10"
+authors = [{ name = "CHDev2116" }]
+keywords = ["machine-learning", "time-series", "finance", "stationarity"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+dependencies = [
+    "pandas>=2.0",
+    "numpy>=1.24",
+    "scikit-learn>=1.4",
+    "matplotlib>=3.7",
+    "yfinance>=0.2",
+    "psutil>=5.9",
+    "joblib>=1.3",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=7.0"]
+ml = ["xgboost>=2.0", "lightgbm>=4.0", "shap>=0.44"]
+serve = ["fastapi>=0.100", "uvicorn>=0.23"]
+torch = ["torch>=2.0"]
+[project.urls]
+Homepage = "https://github.com/CHDev2116/ai-model-stress-tester"
+Repository = "https://github.com/CHDev2116/ai-model-stress-tester"
+Documentation = "https://github.com/CHDev2116/ai-model-stress-tester#readme"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["pipeline*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+markers = [
+    "slow: optional slow tests (e.g. LSTM training)",
+]

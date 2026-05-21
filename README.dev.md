@@ -1,6 +1,6 @@
-# AI Model Stress Tester
+# Stationarity-Aware Market Modeling
 
-A practical time-series ML pipeline for stress-testing stock prediction setups under high volatility.
+Developer setup and operations for the stationarity-aware financial time-series modeling framework (see root `README.md` for results, architecture, and portfolio context).
 
 This project focuses on **data stationarity**, **feature robustness**, and **quick model diagnostics** so you can rapidly compare target definitions (`Price`, `Simple_Return`, `Log_Return`) and understand model behavior.
 
@@ -16,21 +16,25 @@ This project focuses on **data stationarity**, **feature robustness**, and **qui
 ```text
 .
 ├── src/
+│   ├── pipeline/           # shared config, features, training, reports
 │   ├── 1_get_real_data.py
 │   ├── 2_explore_data.py
 │   ├── 3_feature_engineering.py
 │   ├── 4_train_model.py
 │   └── configs.json
+├── tests/
 ├── data/
 ├── reports/
 ├── benchmark.py
+├── requirements.txt
+├── pyproject.toml
 └── README.md
 ```
 
 ## Pipeline
 
 1. **Data Ingestion** - `src/1_get_real_data.py`  
-   Downloads data since `2023-01-01` to today and stores core columns (`Date`, `Close`, `Volume`) plus optional `High/Low` when available.
+   Downloads a rolling **2-year** window (through yesterday) and stores core columns (`Date`, `Close`, `Volume`) plus optional `High/Low` when available.
 
 2. **Data Exploration** - `src/2_explore_data.py`  
    Quick preview + descriptive statistics for sanity checks.
@@ -44,20 +48,21 @@ This project focuses on **data stationarity**, **feature robustness**, and **qui
 ## Requirements
 
 - Python 3.10+ (tested on Python 3.13)
-- Packages:
-  - `pandas`
-  - `numpy`
-  - `scikit-learn`
-  - `matplotlib`
-  - `yfinance`
-  - `psutil`
+- Dependencies: [`pyproject.toml`](pyproject.toml) (PEP 621) · [`requirements.txt`](requirements.txt)
 
-Install:
+Install either way:
 
 ```bash
 python -m venv .venv
 source .venv/bin/activate
-pip install pandas numpy scikit-learn matplotlib yfinance psutil
+pip install ".[dev]"             # runtime + pytest
+# pip install -r requirements.txt
+```
+
+Run tests:
+
+```bash
+pytest -q
 ```
 
 ## Quick Start
@@ -108,7 +113,21 @@ Each ticker uses:
 python src/1_get_real_data.py NVDA
 python src/3_feature_engineering.py NVDA
 python src/4_train_model.py NVDA
+
+# Advanced toolkit (optional extras)
+pip install ".[ml,serve]"
+python scripts/walk_forward_report.py GOOG
+python scripts/benchmark_models.py GOOG
+python scripts/explain_features.py GOOG
+python scripts/regime_report.py GOOG
+python scripts/predict.py --train GOOG && python scripts/predict.py GOOG
+python scripts/serve.py
+python scripts/generate_failure_chart.py
+python scripts/lstm_baseline.py GOOG   # pip install ".[torch]" first
+python scripts/refresh_readme_metrics.py
 ```
+
+See [`docs/GITHUB_REPO.md`](docs/GITHUB_REPO.md) for renaming the GitHub repository to match the project brand.
 
 ## Troubleshooting
 
@@ -120,10 +139,10 @@ Check:
 which python
 ```
 
-Expected:
+Expected (path ends with your clone directory):
 
 ```text
-.../ai-model-stress-tester/.venv/bin/python
+.../<repo>/.venv/bin/python
 ```
 
 If not, run:
@@ -149,7 +168,7 @@ mkdir -p "$MPLCONFIGDIR"
 
 ## License
 
-For personal/portfolio use unless otherwise specified by repository owner.
+MIT — see [LICENSE](LICENSE) in the repository root.
 
 ## Baseline v1 (Current Stable Setup)
 

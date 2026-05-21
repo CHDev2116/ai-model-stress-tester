@@ -1,0 +1,109 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.11", "3.12"]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install ".[dev]"
+
+      - name: Run tests (fast)
+        run: pytest -q -m "not slow"
+
+      - name: Smoke pipeline (offline)
+        run: |
+          mkdir -p data reports
+          python -c "
+          import sys
+          sys.path.insert(0, 'src')
+          import numpy as np, pandas as pd
+          n = 320
+          rng = np.random.default_rng(0)
+          dates = pd.bdate_range('2022-01-01', periods=n)
+          close = 100.0 + np.cumsum(rng.normal(0, 0.8, n))
+          df = pd.DataFrame({'Date': dates, 'Close': close, 'Volume': np.full(n, 1e6), 'High': close*1.01, 'Low': close*0.99})
+          for t in ['goog','avgo','mu','nvda']:
+              df.to_csv(f'data/{t}_assets.csv', index=False)
+          "
+          PYTHONPATH=src python src/3_feature_engineering.py GOOG
+          PYTHONPATH=src python src/4_train_model.py GOOG
+          PYTHONPATH=src python scripts/walk_forward_report.py GOOG
+          PYTHONPATH=src python scripts/predict.py --train GOOG
+          PYTHONPATH=src python scripts/predict.py GOOG
+
+  ml-extras:
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install ML extras
+        run: pip install ".[dev,ml]"
+      - name: Seed data
+        run: |
+          mkdir -p data
+          python -c "
+          import numpy as np, pandas as pd
+          n = 320
+          rng = np.random.default_rng(0)
+          dates = pd.bdate_range('2022-01-01', periods=n)
+          close = 100.0 + np.cumsum(rng.normal(0, 0.8, n))
+          df = pd.DataFrame({'Date': dates, 'Close': close, 'Volume': np.full(n, 1e6), 'High': close*1.01, 'Low': close*0.99})
+          df.to_csv('data/goog_assets.csv', index=False)
+          "
+          PYTHONPATH=src python src/3_feature_engineering.py GOOG
+        env:
+          PYTHONPATH: src
+      - name: Model zoo + SHAP smoke
+        run: |
+          PYTHONPATH=src python scripts/benchmark_models.py GOOG
+          PYTHONPATH=src python scripts/explain_features.py GOOG
+
+  torch-extras:
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install torch extras
+        run: pip install ".[dev,torch]"
+      - name: Seed data and features
+        run: |
+          mkdir -p data
+          python -c "
+          import numpy as np, pandas as pd
+          n = 320
+          rng = np.random.default_rng(0)
+          dates = pd.bdate_range('2022-01-01', periods=n)
+          close = 100.0 + np.cumsum(rng.normal(0, 0.8, n))
+          df = pd.DataFrame({'Date': dates, 'Close': close, 'Volume': np.full(n, 1e6), 'High': close*1.01, 'Low': close*0.99})
+          df.to_csv('data/goog_assets.csv', index=False)
+          "
+          PYTHONPATH=src python src/3_feature_engineering.py GOOG
+        env:
+          PYTHONPATH: src
+      - name: LSTM slow test
+        run: pytest -q -m slow tests/test_lstm_baseline.py
