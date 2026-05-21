@@ -1,18 +1,22 @@
-# GitHub repository name
+# GitHub repository
 
-**Display name:** Stationarity-Aware Market Modeling  
-**Current slug:** `ai-model-stress-tester`  
-**Remote:** https://github.com/CHDev2116/ai-model-stress-tester
+| Field | Value |
+|-------|--------|
+| **Name** | Stationarity-Aware Market Modeling |
+| **Slug** | `stationarity-aware-market-modeling` |
+| **URL** | https://github.com/CHDev2116/stationarity-aware-market-modeling |
 
-`pyproject.toml` URLs match this slug so links work before any rename.
+Former slug `ai-model-stress-tester` redirects here after rename.
 
-## Optional rename
-
-If you want the URL to match the brand:
+## Clone
 
 ```bash
-gh repo rename stationarity-aware-market-modeling
-git remote set-url origin git@github.com:CHDev2116/stationarity-aware-market-modeling.git
+git clone git@github.com:CHDev2116/stationarity-aware-market-modeling.git
+cd stationarity-aware-market-modeling
 ```
 
-Then update `[project.urls]` in `pyproject.toml` to the new slug. GitHub redirects the old name for a transition period.
+## Local remote (if you cloned before rename)
+
+```bash
+git remote set-url origin git@github.com:CHDev2116/stationarity-aware-market-modeling.git
+```

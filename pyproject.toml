@@ -38,9 +38,9 @@ ml = ["xgboost>=2.0", "lightgbm>=4.0", "shap>=0.44"]
 serve = ["fastapi>=0.100", "uvicorn>=0.23"]
 torch = ["torch>=2.0"]
 [project.urls]
-Homepage = "https://github.com/CHDev2116/ai-model-stress-tester"
-Repository = "https://github.com/CHDev2116/ai-model-stress-tester"
-Documentation = "https://github.com/CHDev2116/ai-model-stress-tester#readme"
+Homepage = "https://github.com/CHDev2116/stationarity-aware-market-modeling"
+Repository = "https://github.com/CHDev2116/stationarity-aware-market-modeling"
+Documentation = "https://github.com/CHDev2116/stationarity-aware-market-modeling#readme"
 
 [tool.setuptools.packages.find]
 where = ["src"]

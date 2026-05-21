@@ -282,4 +282,4 @@ Detailed setup, troubleshooting, and operational commands are in [`README.dev.md
 Contributing and release checklist: [`CONTRIBUTING.md`](CONTRIBUTING.md).  
 Optional GitHub rename: [`docs/GITHUB_REPO.md`](docs/GITHUB_REPO.md).
 
-**Repository:** [github.com/CHDev2116/ai-model-stress-tester](https://github.com/CHDev2116/ai-model-stress-tester) (display name: *Stationarity-Aware Market Modeling*).
+**Repository:** [github.com/CHDev2116/stationarity-aware-market-modeling](https://github.com/CHDev2116/stationarity-aware-market-modeling)
